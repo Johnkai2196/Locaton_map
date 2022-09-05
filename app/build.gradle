@@ -61,9 +61,14 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     implementation 'com.google.android.gms:play-services-location:20.0.0'
-     implementation 'org.osmdroid:osmdroid-android:6.1.14'
-     // old android.preference is deprecated, switch to androidx
-     implementation 'androidx.preference:preference-ktx:1.2.0'
-
-
+    implementation 'org.osmdroid:osmdroid-android:6.1.14'
+    // old android.preference is deprecated, switch to androidx
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    // ViewModel utilities for Compose
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
 }
