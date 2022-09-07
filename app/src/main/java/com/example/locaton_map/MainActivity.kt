@@ -15,8 +15,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -32,8 +30,6 @@ import androidx.preference.PreferenceManager
 import com.example.locaton_map.ui.theme.Locaton_mapTheme
 import com.google.android.gms.location.*
 import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
-
-
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -50,11 +46,16 @@ class MainActivity : ComponentActivity() {
     //only works on real phone
     private fun getAddress(lat: Double, lng: Double): String {
         val geocoder = Geocoder(this)
-        var address = ""
-        if (Build.VERSION.SDK_INT >= 33) {
-            geocoder.getFromLocation(lat, lng, 1)
-        } else {
-            address = geocoder.getFromLocation(lat, lng, 1)?.first()?.getAddressLine(0) ?: ""
+        var address = "address could not be received now"
+        try {
+            if (Build.VERSION.SDK_INT >= 33) {
+                geocoder.getFromLocation(lat, lng, 1)
+            } else {
+                address =
+                    geocoder.getFromLocation(lat, lng, 1)?.first()?.getAddressLine(0) ?: ""
+            }
+        } catch (e: Exception) {
+           Log.i("f","f")
         }
         return address
     }
@@ -66,13 +67,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         if ((ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                ACCESS_FINE_LOCATION
             ) !=
                     PackageManager.PERMISSION_GRANTED)
         ) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                arrayOf(ACCESS_FINE_LOCATION),
                 0
             )
         }
@@ -86,7 +87,7 @@ class MainActivity : ComponentActivity() {
         ) {
             fusedLocationClient.lastLocation.addOnSuccessListener {
                 mapViewModel.geoPoint(it.latitude, it.longitude)
-                //  Log.i("GEOLOCATION",getAddress(it.latitude,it.longitude))
+                mapViewModel.getAddress(getAddress(it.latitude, it.longitude))
                 Log.d(
                     "GEOLOCATION",
                     "last location latitude:${it?.latitude} and longitude: ${it?.longitude}"
@@ -103,6 +104,7 @@ class MainActivity : ComponentActivity() {
                         "GEOLOCATION",
                         "location latitude:${location.latitude} and longitude:${location.longitude}"
                     )
+                    mapViewModel.getAddress(getAddress(location.latitude, location.longitude))
                 }
             }
         }
@@ -122,9 +124,11 @@ class MainActivity : ComponentActivity() {
                         Column(modifier = Modifier.weight(0.25f)) {
                             ShowMap(mapViewModel = mapViewModel)
                         }
-                        Column(modifier = Modifier
-                            .weight(0.25f)
-                            .fillMaxWidth()) {
+                        Column(
+                            modifier = Modifier
+                                .weight(0.25f)
+                                .fillMaxWidth()
+                        ) {
                             Row {
                                 Button(onClick = {
                                     val locationRequest = LocationRequest
