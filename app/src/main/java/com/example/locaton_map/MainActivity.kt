@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
         private var mapViewModel = MapViewModel()
     }
 
-    //only works on real phone
+    //Works better in real phone
     private fun getAddress(lat: Double, lng: Double): String {
         val geocoder = Geocoder(this)
         var address = "address could not be received now"
