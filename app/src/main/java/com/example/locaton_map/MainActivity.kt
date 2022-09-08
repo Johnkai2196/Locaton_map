@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
         var address = "address could not be received now"
         try {
             if (Build.VERSION.SDK_INT >= 33) {
-                geocoder.getFromLocation(lat, lng, 1)
+                address = geocoder.getFromLocation(lat, lng, 1)?.first()?.getAddressLine(0) ?: ""
             } else {
                 address =
                     geocoder.getFromLocation(lat, lng, 1)?.first()?.getAddressLine(0) ?: ""
@@ -195,7 +195,7 @@ fun ShowMap(mapViewModel: MapViewModel) {
         marker.closeInfoWindow()
         map.setMultiTouchControls(true)
         marker.title =
-            "Latitude: ${geo?.latitude} \nLongitude: ${geo?.longitude} \nAddress: ${add ?: "address could not be received now"}"
+            "Latitude: ${geo?.latitude} \nLongitude: ${geo?.longitude} \nAddress: $add"
         map.overlays.add(marker)
         map.invalidate()
     }
