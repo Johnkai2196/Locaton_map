@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     geocoder.getFromLocation(lat, lng, 1)?.first()?.getAddressLine(0) ?: ""
             }
         } catch (e: Exception) {
-           Log.i("f","f")
+            Log.i("Error", e.localizedMessage)
         }
         return address
     }
@@ -133,7 +133,7 @@ class MainActivity : ComponentActivity() {
                                 Button(onClick = {
                                     val locationRequest = LocationRequest
                                         .create()
-                                        .setInterval(0)
+                                        .setInterval(1000)
                                         .setPriority(PRIORITY_HIGH_ACCURACY)
                                     //if permissions granted...
                                     fusedLocationClient.requestLocationUpdates(
